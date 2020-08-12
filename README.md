@@ -1,4 +1,4 @@
-[![Workflow Status](https://github.com/tanakh/argio/workflows/rust/badge.svg)](https://github.com/tanakh/argio/actions?query=workflow%3A%22rust%22)
+[![Workflow Status](https://github.com/tanakh/argio/workflows/Rust/badge.svg)](https://github.com/tanakh/argio/actions?query=workflow%3A%22Rust%22)
 
 # argio
 
