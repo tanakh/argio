@@ -119,3 +119,5 @@ Case #1: 0 2
 Case #2: 0 2 4
 Case #3: 0 2 4 6 8
 ```
+
+License: MIT
