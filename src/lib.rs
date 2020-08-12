@@ -33,7 +33,7 @@
 //!
 //! You can change the macro for the input by setting the `input` parameter. A macro takes the arguments of the function as they are.
 //!
-//! ```
+//! ```compile_fail
 //! # use argio::argio;
 //!
 //! macro_rules! my_input {
