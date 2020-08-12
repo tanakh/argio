@@ -35,7 +35,6 @@
 //!
 //! ```compile_fail
 //! # use argio::argio;
-//!
 //! macro_rules! my_input {
 //!     ...
 //! }
