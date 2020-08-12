@@ -2,7 +2,7 @@
 //!
 //! This macro changes the arguments and return value of a function to take them from standard input and output.
 //!
-//! ```
+//! ```should_panic
 //! # use argio::argio;
 //! #[argio]
 //! fn main(n: i32) -> i32 {
@@ -14,7 +14,7 @@
 //!
 //! Because this macro uses [proconio](https://crates.io/crates/proconio) as a backend for input, you can put the same arguments as those that can be passed to the `input!` macro of `proconio` in the function (even if they are not the correct syntax for Rust).
 //!
-//! ```
+//! ```should_panic
 //! # use argio::argio;
 //! #[argio]
 //! fn main(n: usize, x: [i64; n]) -> i64 {
@@ -49,7 +49,7 @@
 //!
 //! You can customize the behavior of the output by using a wrapper struct that implements the `Display` trait.
 //!
-//! ```
+//! ```should_panic
 //! # use argio::argio;
 //! # use std::{fmt, fmt::Display};
 //! struct Wrap<T>(T);
@@ -79,7 +79,7 @@
 //!
 //! Of course, you can also output manually. If the return value of the function is `()`, it does not output anything to the standard output, so you can output it manually and return `()`.
 //!
-//! ```
+//! ```should_panic
 //! # use argio::argio;
 //! #[argio]
 //! fn main(n: usize) {
@@ -96,7 +96,7 @@
 //!
 //! You can also specify a wrapper for the output from a macro parameter. This has the advantage of removing information about the wrapper from the code, allowing you to move the output customization to the template part of the code.
 //!
-//! ```
+//! ```should_panic
 //! # use argio::argio;
 //! # use std::fmt::{self, Display};
 //! # struct Wrap<T>(T);
@@ -121,7 +121,7 @@
 //!
 //! The value of the attribute `multicase` is a string to be displayed at the top of each case. The variable `i` contains the case number of 0 origin, so you can customize the display by using it.
 //!
-//! ```
+//! ```should_panic
 //! # use argio::argio;
 //! # use std::fmt::{self, Display};
 //! # struct Wrap<T>(T);
