@@ -9,7 +9,7 @@ repository = "https://github.com/tanakh/argio"
 license = "MIT"
 readme = "README.md"
 
-categories = ["Development tools"]
+categories = ["development-tools"]
 keywords = ["io", "proc-macro"]
 
 [lib]
