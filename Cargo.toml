@@ -24,6 +24,7 @@ proc-macro2 = "1.0.19"
 
 [dev-dependencies]
 proconio = "0.4"
+trybuild = "1.0.32"
 
 [badges]
 github = { repository = "tanakh/argio", workflow = "Rust" }

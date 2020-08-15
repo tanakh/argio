@@ -1,0 +1,14 @@
+error: argio: invalid attr: outptu
+ --> $DIR/invalid-attr.rs:1:16
+  |
+1 | #[argio::argio(outptu = Wrap)]
+  |                ^^^^^^
+
+error[E0601]: `main` function not found in crate `$CRATE`
+ --> $DIR/invalid-attr.rs:1:1
+  |
+1 | / #[argio::argio(outptu = Wrap)]
+2 | | fn main(n: usize) -> usize {
+3 | |     n
+4 | | }
+  | |_^ consider adding a `main` function to `$DIR/tests/ui/fail/invalid-attr.rs`
