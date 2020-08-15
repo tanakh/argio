@@ -193,11 +193,15 @@ pub fn argio(attr: TokenStream, item: TokenStream) -> TokenStream {
         parse_quote! { proconio::input }
     };
 
-    let ret = if let Some(fmt_str) = &attr.multicase {
+    let ret = if let Some((fmt_str, fmt_span)) = &attr.multicase {
         let re = regex::Regex::new(r"^([^{]*)\{([^:}]+)(:[^}]+)?\}(.*)$").unwrap();
-        let caps = re
-            .captures(&fmt_str)
-            .unwrap_or_else(|| panic!("Invalid multicase format: {}", &fmt_str));
+        let caps = if let Some(caps) = re.captures(&fmt_str) {
+            caps
+        } else {
+            return syn::Error::new(*fmt_span, "Invalid multicase format")
+                .to_compile_error()
+                .into();
+        };
 
         let fmt_str = format!(
             "{}{{{}}}{}",
@@ -206,8 +210,14 @@ pub fn argio(attr: TokenStream, item: TokenStream) -> TokenStream {
             &caps[4]
         );
 
-        let mut fmt_arg: syn::Expr = syn::parse_str(&caps[2])
-            .unwrap_or_else(|_| panic!("Invalid multicase format: {}", &fmt_str));
+        let mut fmt_arg: syn::Expr = match syn::parse_str(&caps[2]) {
+            Ok(fmt_arg) => fmt_arg,
+            Err(err) => {
+                return syn::Error::new(*fmt_span, format!("{}: `{}`", err, &caps[2]))
+                    .to_compile_error()
+                    .into();
+            }
+        };
 
         let case_id: syn::Ident = parse_quote! { case_id };
 
@@ -266,7 +276,7 @@ impl syn::visit_mut::VisitMut for VarRewriter {
 }
 
 struct ArgioAttr {
-    multicase: Option<String>,
+    multicase: Option<(String, proc_macro2::Span)>,
     input: Option<syn::Path>,
     output: Option<syn::Path>,
 }
@@ -300,9 +310,9 @@ impl syn::parse::Parse for ArgioAttr {
                 if input.peek(Token![=]) {
                     input.parse::<Token![=]>()?;
                     let s = input.parse::<syn::LitStr>()?;
-                    ret.multicase = Some(s.value());
+                    ret.multicase = Some((s.value(), s.span()));
                 } else {
-                    ret.multicase = Some("Case #{i+1}: ".to_string());
+                    ret.multicase = Some(("Case #{i+1}: ".to_string(), input.span()));
                 }
             } else if var == "output" {
                 input.parse::<Token![=]>()?;
@@ -313,7 +323,10 @@ impl syn::parse::Parse for ArgioAttr {
                 let path = input.parse::<syn::Path>()?;
                 ret.input = Some(path);
             } else {
-                panic!("argio: invalid attr: {}", var);
+                return Err(syn::Error::new(
+                    var.span(),
+                    format!("argio: invalid attr: {}", var),
+                ));
             }
         }
 
