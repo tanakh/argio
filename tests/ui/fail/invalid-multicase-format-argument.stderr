@@ -1,0 +1,14 @@
+error: unexpected end of input, expected expression: `i + `
+ --> $DIR/invalid-multicase-format-argument.rs:1:28
+  |
+1 | #[argio::argio(multicase = "{i + }")]
+  |                            ^^^^^^^^
+
+error[E0601]: `main` function not found in crate `$CRATE`
+ --> $DIR/invalid-multicase-format-argument.rs:1:1
+  |
+1 | / #[argio::argio(multicase = "{i + }")]
+2 | | fn main(n: usize) -> usize {
+3 | |     n
+4 | | }
+  | |_^ consider adding a `main` function to `$DIR/tests/ui/fail/invalid-multicase-format-argument.rs`
