@@ -1,6 +1,6 @@
 [package]
 name = "argio"
-version = "0.1.4"
+version = "0.1.5-alpha.0"
 authors = ["Hideyuki Tanaka <tanaka.hideyuki@gmail.com>"]
 edition = "2018"
 
