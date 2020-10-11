@@ -194,37 +194,53 @@ pub fn argio(attr: TokenStream, item: TokenStream) -> TokenStream {
     };
 
     let ret = if let Some((fmt_str, fmt_span)) = &attr.multicase {
-        let re = regex::Regex::new(r"^([^{]*)\{([^:}]+)(:[^}]+)?\}(.*)$").unwrap();
-        let caps = if let Some(caps) = re.captures(&fmt_str) {
-            caps
+        let (case_id, print_header) = if !fmt_str.contains('{') {
+            (
+                parse_quote! { case_id },
+                quote! {
+                    print!(#fmt_str);
+                },
+            )
         } else {
-            return syn::Error::new(*fmt_span, "Invalid multicase format")
-                .to_compile_error()
-                .into();
-        };
-
-        let fmt_str = format!(
-            "{}{{{}}}{}",
-            &caps[1],
-            caps.get(3).map(|r| r.as_str()).unwrap_or(""),
-            &caps[4]
-        );
-
-        let mut fmt_arg: syn::Expr = match syn::parse_str(&caps[2]) {
-            Ok(fmt_arg) => fmt_arg,
-            Err(err) => {
-                return syn::Error::new(*fmt_span, format!("{}: `{}`", err, &caps[2]))
+            let re = regex::Regex::new(r"^([^{]*)\{([^:}]+)(:[^}]+)?\}(.*)$").unwrap();
+            let caps = if let Some(caps) = re.captures(&fmt_str) {
+                caps
+            } else {
+                return syn::Error::new(*fmt_span, "Invalid multicase format")
                     .to_compile_error()
                     .into();
+            };
+
+            let fmt_str = format!(
+                "{}{{{}}}{}",
+                &caps[1],
+                caps.get(3).map(|r| r.as_str()).unwrap_or(""),
+                &caps[4]
+            );
+
+            let mut fmt_arg: syn::Expr = match syn::parse_str(&caps[2]) {
+                Ok(fmt_arg) => fmt_arg,
+                Err(err) => {
+                    return syn::Error::new(*fmt_span, format!("{}: `{}`", err, &caps[2]))
+                        .to_compile_error()
+                        .into();
+                }
+            };
+
+            let case_id: syn::Ident = parse_quote! { case_id };
+
+            VarRewriter {
+                case_id: case_id.clone(),
             }
+            .visit_expr_mut(&mut fmt_arg);
+
+            (
+                case_id,
+                quote! {
+                    print!(#fmt_str, #fmt_arg);
+                },
+            )
         };
-
-        let case_id: syn::Ident = parse_quote! { case_id };
-
-        VarRewriter {
-            case_id: case_id.clone(),
-        }
-        .visit_expr_mut(&mut fmt_arg);
 
         quote! {
             #vis fn #name() {
@@ -233,7 +249,7 @@ pub fn argio(attr: TokenStream, item: TokenStream) -> TokenStream {
                 }
 
                 for #case_id in 0..cases {
-                    print!(#fmt_str, #fmt_arg);
+                    #print_header
 
                     let #ret_var = (|| -> #ret_type {
                         #input_macro ! {

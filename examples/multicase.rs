@@ -15,6 +15,7 @@ impl<T: Display> Display for Wrap<Vec<T>> {
 }
 
 #[argio::argio(multicase, output = Wrap)]
+// This is same as `#[argio::argio(multicase = "Case {i+1}: ", output = Wrap)]`
 fn main(n: usize) -> Vec<usize> {
     (0..n).map(|i| i * 2).collect()
 }
