@@ -1,0 +1,15 @@
+[package]
+name = "argio-macro"
+version = "0.2.0"
+authors = ["Hideyuki Tanaka <tanaka.hideyuki@gmail.com>"]
+edition = "2018"
+
+[lib]
+proc-macro = true
+path = "src/lib.rs"
+
+[dependencies]
+proc-macro2 = "1.0.27"
+quote = "1.0.9"
+regex = "1.5.4"
+syn = { version = "1.0.72", features = ["full", "visit-mut", "extra-traits"] }
