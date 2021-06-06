@@ -16,7 +16,7 @@ categories = ["development-tools"]
 keywords = ["io", "proc-macro"]
 
 [dependencies]
-argio-macro = { path = "argio-macro" }
+argio-macro = { path = "argio-macro", version = "0.2.0" }
 proconio = "0.4.3"
 
 [dev-dependencies]
