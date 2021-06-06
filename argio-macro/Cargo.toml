@@ -4,6 +4,10 @@ version = "0.2.0"
 authors = ["Hideyuki Tanaka <tanaka.hideyuki@gmail.com>"]
 edition = "2018"
 
+description = "A macro to convert function input and output to stdio"
+repository = "https://github.com/tanakh/argio"
+license = "MIT"
+
 [lib]
 proc-macro = true
 path = "src/lib.rs"
